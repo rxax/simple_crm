@@ -1,5 +1,6 @@
 from django.conf import settings
 from django.db import models
+from tinymce.models import HTMLField
 
 """
 Basic CRM: Account, Contact, Opportunity, Activity, Task
@@ -18,8 +19,8 @@ class Account(TimeStampedModel):
     Companies / Organizations
     """
     class Meta:
-        verbose_name = "client company"
-        verbose_name_plural = "client companies"
+        verbose_name = "company"
+        verbose_name_plural = "companies"
 
     name = models.CharField(max_length=255)
     website = models.URLField(blank=True)
@@ -207,7 +208,7 @@ class Task(TimeStampedModel):
 
     title = models.CharField(max_length=255)
 
-    description = models.TextField(blank=True)
+    description = HTMLField(blank=True)
 
     due_date = models.DateTimeField(
         null=True,
