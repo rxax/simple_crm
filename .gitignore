@@ -1,0 +1,5 @@
+.venv
+.idea
+/piv/db.sqlite3
+/piv/crm/migrations/
+/piv/invoice/migrations/
