@@ -6,7 +6,15 @@ from crm.models import TimeStampedModel, Account
 """
 Add Invoicing feature 
 """
+
+"""
+    basically the Subscription model is a contract
+"""
 class Subscription(TimeStampedModel):
+
+    class Meta:
+        verbose_name = "subscription contract"
+        verbose_name_plural = "Subscriptions and Contracts"
 
     class BillingCycle(models.TextChoices):
         MONTHLY = "monthly", "Monthly"
@@ -15,6 +23,7 @@ class Subscription(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
+        verbose_name='Company',
         on_delete=models.CASCADE,
         related_name="subscriptions"
     )
@@ -62,6 +71,7 @@ class Invoice(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
+        verbose_name='Company',
         on_delete=models.CASCADE,
         related_name="invoices"
     )

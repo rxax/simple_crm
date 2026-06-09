@@ -17,6 +17,10 @@ class Account(TimeStampedModel):
     """
     Companies / Organizations
     """
+    class Meta:
+        verbose_name = "client company"
+        verbose_name_plural = "client companies"
+
     name = models.CharField(max_length=255)
     website = models.URLField(blank=True)
     industry = models.CharField(max_length=100, blank=True)
@@ -42,6 +46,7 @@ class Contact(TimeStampedModel):
     """
     account = models.ForeignKey(
         Account,
+        verbose_name='Company',
         on_delete=models.CASCADE,
         related_name="contacts",
         null=True,
@@ -73,6 +78,8 @@ class Opportunity(TimeStampedModel):
     """
     Potential Deals
     """
+    class Meta:
+        verbose_name_plural = "opportunities"
 
     class Stage(models.TextChoices):
         LEAD = "lead", "Lead"
@@ -86,6 +93,7 @@ class Opportunity(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
+        verbose_name='Company',
         on_delete=models.CASCADE,
         related_name="opportunities"
     )
@@ -158,6 +166,7 @@ class Activity(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
+        verbose_name='Company',
         on_delete=models.CASCADE,
         related_name="activities",
         null=True,
@@ -228,6 +237,7 @@ class Task(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
+        verbose_name='Company',
         on_delete=models.CASCADE,
         related_name="tasks",
         null=True,

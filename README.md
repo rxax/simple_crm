@@ -25,3 +25,6 @@ Default admin and password
 
 `python manage.py runserver`
 
+Notes:
+
+using [grappelli](https://django-grappelli.readthedocs.io/en/latest/quickstart.html#installation) theme
