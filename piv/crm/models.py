@@ -13,14 +13,31 @@ class TimeStampedModel(models.Model):
     class Meta:
         abstract = True
 
+class Company(models.Model):
+    class Meta:
+        verbose_name_plural = "managed companies"
+
+    name = models.CharField(max_length=255)
+    vat_number = models.CharField(max_length=50)
+    registration_number = models.CharField(max_length=50)
+    billing_email = models.EmailField()
+    address = models.TextField()
+    website = models.URLField(blank=True)
+    currency = models.CharField(
+        max_length=3,
+        default="EUR"
+    )
+
+    def __str__(self):
+        return self.name
 
 class Account(TimeStampedModel):
     """
-    Companies / Organizations
+    Customer / Prospect
     """
     class Meta:
-        verbose_name = "company"
-        verbose_name_plural = "companies"
+        verbose_name_plural = "client companies"
+
 
     name = models.CharField(max_length=255)
     website = models.URLField(blank=True)
@@ -47,7 +64,7 @@ class Contact(TimeStampedModel):
     """
     account = models.ForeignKey(
         Account,
-        verbose_name='Company',
+        verbose_name='Client Company',
         on_delete=models.CASCADE,
         related_name="contacts",
         null=True,
@@ -94,7 +111,7 @@ class Opportunity(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
-        verbose_name='Company',
+        verbose_name='Client Company',
         on_delete=models.CASCADE,
         related_name="opportunities"
     )
@@ -167,7 +184,7 @@ class Activity(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
-        verbose_name='Company',
+        verbose_name='Client Company',
         on_delete=models.CASCADE,
         related_name="activities",
         null=True,

@@ -1,7 +1,7 @@
 from django.conf import settings
 from django.db import models
 
-from crm.models import TimeStampedModel, Account
+from crm.models import TimeStampedModel, Account, Company
 
 """
 Add Invoicing feature 
@@ -23,7 +23,7 @@ class Subscription(TimeStampedModel):
 
     account = models.ForeignKey(
         Account,
-        verbose_name='Company',
+        verbose_name='Client Company',
         on_delete=models.CASCADE,
         related_name="subscriptions"
     )
@@ -69,10 +69,18 @@ class Invoice(TimeStampedModel):
         OVERDUE = "overdue", "Overdue"
         CANCELLED = "cancelled", "Cancelled"
 
+    issuer = models.ForeignKey(
+        Company,
+        verbose_name='Issuing Company',
+        on_delete=models.PROTECT,
+        related_name="issued_invoices",
+        null=True
+    )
+
     account = models.ForeignKey(
         Account,
-        verbose_name='Company',
-        on_delete=models.CASCADE,
+        verbose_name='Client Company',
+        on_delete=models.PROTECT,
         related_name="invoices"
     )
 
