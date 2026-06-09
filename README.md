@@ -17,6 +17,11 @@ Seems to overlap on Windows11
 
 Default admin and password
 
+**Collect static files**
+
+`python manage.py collectstatic`
+
 ** Start the server **
 
 `python manage.py runserver`
+
