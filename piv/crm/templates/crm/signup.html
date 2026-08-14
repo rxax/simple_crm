@@ -1,0 +1,205 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up - CRM</title>
+    <style>
+      :root {
+        --background-color: #191919;
+        --card-bg: #222;
+        --input-bg: rgba(255, 255, 255, 0.05);
+        --input-border: rgba(255, 255, 255, 0.1);
+        --input-focus: #38bdf8;
+        --text-primary: #ffffff;
+        --text-secondary: rgba(255, 255, 255, 0.7);
+        --button-bg: #38bdf8;
+        --button-hover: #0284c7;
+        --error-color: #f472b6;
+        --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+      }
+
+      * { box-sizing: border-box; }
+
+      body {
+        margin: 0;
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        padding: 1rem;
+        font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+        background: linear-gradient(135deg, #0f0f0f 0%, #191919 50%, #1a1a2e 100%);
+        color: var(--text-primary);
+      }
+
+      .signup-container {
+        width: 100%;
+        max-width: 480px;
+      }
+
+      .signup-card {
+        background: var(--card-bg);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        border-radius: 12px;
+        padding: 2.5rem 2rem;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+      }
+
+      .signup-header {
+        text-align: center;
+        margin-bottom: 2rem;
+      }
+
+      .signup-header h1 {
+        margin: 0 0 0.5rem;
+        font-size: 2rem;
+        letter-spacing: -0.02em;
+      }
+
+      .signup-header p {
+        margin: 0;
+        color: var(--text-secondary);
+      }
+
+      .messages {
+        margin-bottom: 1.5rem;
+        padding: 1rem;
+        border-left: 4px solid var(--error-color);
+        border-radius: 8px;
+        background: rgba(244, 114, 182, 0.08);
+      }
+
+      .messages ul {
+        margin: 0;
+        padding-left: 1.2rem;
+      }
+
+      .messages li {
+        color: #fca5d5;
+      }
+
+      .form-group {
+        margin-bottom: 1.25rem;
+      }
+
+      .form-group label {
+        display: block;
+        margin-bottom: 0.5rem;
+        font-size: 0.8rem;
+        font-weight: 600;
+        color: var(--text-secondary);
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+      }
+
+      .form-group input {
+        width: 100%;
+        padding: 0.875rem 1rem;
+        border: 1px solid var(--input-border);
+        border-radius: 8px;
+        background: var(--input-bg);
+        color: var(--text-primary);
+        font-size: 1rem;
+        transition: var(--transition);
+      }
+
+      .form-group input:focus {
+        outline: none;
+        border-color: var(--input-focus);
+        box-shadow: 0 0 0 3px rgba(56, 189, 248, 0.1);
+      }
+
+      .submit-button {
+        width: 100%;
+        margin-top: 0.5rem;
+        padding: 1rem;
+        border: none;
+        border-radius: 8px;
+        background: linear-gradient(135deg, var(--button-bg) 0%, #0284c7 100%);
+        color: white;
+        font-size: 1rem;
+        font-weight: 700;
+        letter-spacing: 0.05em;
+        text-transform: uppercase;
+        cursor: pointer;
+        transition: var(--transition);
+      }
+
+      .submit-button:hover {
+        background: linear-gradient(135deg, var(--button-hover) 0%, #1b4965 100%);
+        transform: translateY(-2px);
+      }
+
+      .signup-footer {
+        margin-top: 1.25rem;
+        text-align: center;
+        color: var(--text-secondary);
+      }
+
+      .signup-footer a {
+        color: #7dd3fc;
+        text-decoration: none;
+      }
+
+      .signup-footer a:hover {
+        text-decoration: underline;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="signup-container">
+      <div class="signup-card">
+        <div class="signup-header">
+          <h1>Create Account</h1>
+          <p>Start managing your CRM access</p>
+        </div>
+
+        {% if form.errors %}
+          <div class="messages">
+            <ul>
+              {% for field in form %}
+                {% for error in field.errors %}
+                  <li>{{ error }}</li>
+                {% endfor %}
+              {% endfor %}
+              {% for error in form.non_field_errors %}
+                <li>{{ error }}</li>
+              {% endfor %}
+            </ul>
+          </div>
+        {% endif %}
+
+        <form method="post">
+          {% csrf_token %}
+
+          <div class="form-group">
+            <label for="id_email">Email</label>
+            <input type="email" id="id_email" name="email" value="{{ form.email.value|default:'' }}" required autocomplete="email">
+          </div>
+
+          <div class="form-group">
+            <label for="id_password">Password</label>
+            <input type="password" id="id_password" name="password" required autocomplete="new-password">
+          </div>
+
+          <div class="form-group">
+            <label for="id_full_name">Full Name</label>
+            <input type="text" id="id_full_name" name="full_name" value="{{ form.full_name.value|default:'' }}" required autocomplete="name">
+          </div>
+
+          <div class="form-group">
+            <label for="id_phone">Phone</label>
+            <input type="tel" id="id_phone" name="phone" value="{{ form.phone.value|default:'' }}" required autocomplete="tel">
+          </div>
+
+          <button type="submit" class="submit-button">Sign Up</button>
+        </form>
+
+        <div class="signup-footer">
+          Already have an account? <a href="{% url 'login' %}">Login</a>
+        </div>
+      </div>
+    </div>
+  </body>
+</html>
