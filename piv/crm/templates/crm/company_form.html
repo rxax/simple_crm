@@ -1,0 +1,94 @@
+{% extends "crm/base.html" %}
+
+{% block title %}{% if mode == 'Edit' %}Edit Company{% else %}Create Company{% endif %} - CRM{% endblock %}
+{% block page_title %}{% if mode == 'Edit' %}Edit company{% else %}Create company{% endif %}{% endblock %}
+
+{% block content %}
+<div class="card" style="max-width: 900px; margin: 0 auto;">
+  <h2 style="margin-bottom: 0.5rem;">{% if mode == 'Edit' %}Update company details{% else %}Add a new company{% endif %}</h2>
+  <p style="color: rgba(255, 255, 255, 0.7); margin-bottom: 1.5rem;">Company owner: {{ request.user.get_full_name|default:request.user.email }}</p>
+
+  {% if form.non_field_errors %}
+    <div class="messages" style="margin-bottom: 1.5rem;">
+      <ul>
+        {% for error in form.non_field_errors %}
+          <li>{{ error }}</li>
+        {% endfor %}
+      </ul>
+    </div>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1.25rem;">
+      <div>
+        <label for="{{ form.name.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7); font-weight: 600;">Name</label>
+        <input type="text" id="{{ form.name.id_for_label }}" name="name" value="{{ form.name.value|default:'' }}" required style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem;">
+        {% if form.name.errors %}
+          <div style="color: #fca5d5; font-size: 0.9rem; margin-top: 0.35rem;">{{ form.name.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.vat_number.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7); font-weight: 600;">VAT Number</label>
+        <input type="text" id="{{ form.vat_number.id_for_label }}" name="vat_number" value="{{ form.vat_number.value|default:'' }}" required style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem;">
+        {% if form.vat_number.errors %}
+          <div style="color: #fca5d5; font-size: 0.9rem; margin-top: 0.35rem;">{{ form.vat_number.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.registration_number.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7); font-weight: 600;">Registration Number</label>
+        <input type="text" id="{{ form.registration_number.id_for_label }}" name="registration_number" value="{{ form.registration_number.value|default:'' }}" required style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem;">
+        {% if form.registration_number.errors %}
+          <div style="color: #fca5d5; font-size: 0.9rem; margin-top: 0.35rem;">{{ form.registration_number.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.billing_email.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7); font-weight: 600;">Billing Email</label>
+        <input type="email" id="{{ form.billing_email.id_for_label }}" name="billing_email" value="{{ form.billing_email.value|default:'' }}" required style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem;">
+        {% if form.billing_email.errors %}
+          <div style="color: #fca5d5; font-size: 0.9rem; margin-top: 0.35rem;">{{ form.billing_email.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.website.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7); font-weight: 600;">Website</label>
+        <input type="url" id="{{ form.website.id_for_label }}" name="website" value="{{ form.website.value|default:'' }}" style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem;">
+        {% if form.website.errors %}
+          <div style="color: #fca5d5; font-size: 0.9rem; margin-top: 0.35rem;">{{ form.website.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+
+      <div>
+        <label for="{{ form.currency.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7); font-weight: 600;">Currency</label>
+        <select id="{{ form.currency.id_for_label }}" name="currency" style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem; appearance: none; -webkit-appearance: none; -moz-appearance: none;">
+          {% for value, label in form.currency.field.choices %}
+            {% if forloop.counter0 == 3 %}
+              <option disabled style="background: rgba(34,34,34,0.95); color: rgba(255,255,255,0.4);">──────────</option>
+            {% endif %}
+            <option value="{{ value }}" {% if form.currency.value|stringformat:'s' == value|stringformat:'s' %}selected{% endif %} style="background: rgba(34,34,34,0.95); color: white;">{{ label }}</option>
+          {% endfor %}
+        </select>
+        {% if form.currency.errors %}
+          <div style="color: #fca5d5; font-size: 0.9rem; margin-top: 0.35rem;">{{ form.currency.errors|join:', ' }}</div>
+        {% endif %}
+      </div>
+    </div>
+
+    <div style="margin-top: 1.5rem;">
+      <label for="{{ form.address.id_for_label }}" style="display: block; margin-bottom: 0.5rem; color: rgba(255,255,255,0.7); font-weight: 600;">Address</label>
+      <textarea id="{{ form.address.id_for_label }}" name="address" rows="4" required style="width: 100%; padding: 0.85rem 1rem; border-radius: 8px; border: 1px solid rgba(255,255,255,0.1); background: rgba(255,255,255,0.05); color: white; font-size: 1rem; resize: vertical;">{{ form.address.value|default:'' }}</textarea>
+      {% if form.address.errors %}
+        <div style="color: #fca5d5; font-size: 0.9rem; margin-top: 0.35rem;">{{ form.address.errors|join:', ' }}</div>
+      {% endif %}
+    </div>
+
+    <div style="margin-top: 1.5rem; display: flex; gap: 1rem; flex-wrap: wrap;">
+      <button type="submit" style="padding: 0.85rem 1.5rem; border: none; border-radius: 8px; background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); color: white; font-weight: 700; cursor: pointer;">{% if mode == 'Edit' %}Save changes{% else %}Create company{% endif %}</button>
+      <a href="{% url 'companies' %}" style="display: inline-flex; align-items: center; justify-content: center; padding: 0.85rem 1.5rem; border-radius: 8px; color: white; text-decoration: none; background: rgba(255,255,255,0.06); border: 1px solid rgba(255,255,255,0.1);">Cancel</a>
+    </div>
+  </form>
+</div>
+{% endblock %}

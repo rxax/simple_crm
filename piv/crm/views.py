@@ -1,10 +1,11 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, get_object_or_404
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .forms import SignupForm, ProfileUpdateForm
+from .forms import SignupForm, ProfileUpdateForm, CompanyForm
+from .models import Company
 
 
 @login_required(login_url='login')
@@ -61,6 +62,50 @@ def signup_view(request):
     else:
         form = SignupForm()
     return render(request, "crm/signup.html", {"form": form})
+
+
+@login_required(login_url='login')
+def company_list_view(request):
+    companies = Company.objects.all().order_by("name")
+    form = CompanyForm()
+    return render(request, "crm/companies.html", {"companies": companies, "form": form})
+
+
+@login_required(login_url='login')
+def company_create_view(request):
+    if request.method == "POST":
+        form = CompanyForm(request.POST)
+        if form.is_valid():
+            company = form.save()
+            messages.success(request, f"Company '{company.name}' created successfully.")
+            return redirect("companies")
+    else:
+        form = CompanyForm()
+    return render(request, "crm/company_form.html", {"form": form, "mode": "Create"})
+
+
+@login_required(login_url='login')
+def company_edit_view(request, pk):
+    company = get_object_or_404(Company, pk=pk)
+    if request.method == "POST":
+        form = CompanyForm(request.POST, instance=company)
+        if form.is_valid():
+            form.save()
+            messages.success(request, f"Company '{company.name}' updated successfully.")
+            return redirect("companies")
+    else:
+        form = CompanyForm(instance=company)
+    return render(request, "crm/company_form.html", {"form": form, "company": company, "mode": "Edit"})
+
+
+@login_required(login_url='login')
+def company_delete_view(request, pk):
+    company = get_object_or_404(Company, pk=pk)
+    if request.method == "POST":
+        name = company.name
+        company.delete()
+        messages.success(request, f"Company '{name}' deleted successfully.")
+    return redirect("companies")
 
 
 def logout_view(request):

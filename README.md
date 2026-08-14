@@ -1,6 +1,20 @@
 # Simple CRM
 
-This project is a Django CRM app with login, signup, dashboard, and profile management.
+This project is a Django CRM app with login, signup, dashboard, profile management, and company administration.
+
+## Screenshots
+
+### Login
+
+![Login](docs/screenshots/login.jpg)
+
+### Dashboard
+
+![Dashboard](docs/screenshots/dashboard.jpg)
+
+### Companies
+
+![Companies](docs/screenshots/company.jpg)
 
 ## Run locally
 

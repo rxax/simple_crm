@@ -13,6 +13,22 @@ class TimeStampedModel(models.Model):
     class Meta:
         abstract = True
 
+class Currency(models.Model):
+    code = models.CharField(max_length=3, unique=True)
+    name = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ["code"]
+
+    def __str__(self):
+        return self.code
+
+
+def default_currency():
+    currency, _ = Currency.objects.get_or_create(code="EUR", defaults={"name": "Euro"})
+    return currency.pk
+
+
 class Company(models.Model):
     class Meta:
         verbose_name_plural = "managed companies"
@@ -23,9 +39,13 @@ class Company(models.Model):
     billing_email = models.EmailField()
     address = models.TextField()
     website = models.URLField(blank=True)
-    currency = models.CharField(
-        max_length=3,
-        default="EUR"
+    currency = models.ForeignKey(
+        "Currency",
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        default=default_currency,
+        related_name="companies"
     )
 
     def __str__(self):

@@ -1,8 +1,9 @@
 from django import forms
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
+from django.db.models import Case, IntegerField, Value, When
 
-from .models import UserProfile
+from .models import UserProfile, Company, Currency
 
 User = get_user_model()
 
@@ -124,3 +125,44 @@ class ProfileUpdateForm(forms.Form):
         profile.save()
 
         return self.user
+
+
+class CompanyForm(forms.ModelForm):
+    currency = forms.ModelChoiceField(
+        queryset=Currency.objects.none(),
+        empty_label=None,
+    )
+
+    class Meta:
+        model = Company
+        fields = [
+            "name",
+            "vat_number",
+            "registration_number",
+            "billing_email",
+            "address",
+            "website",
+            "currency",
+        ]
+        widgets = {
+            "address": forms.Textarea(attrs={"rows": 4}),
+            "website": forms.URLInput(),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        preferred_order = Currency.objects.order_by(
+            Case(
+                When(code="EUR", then=Value(0)),
+                When(code="USD", then=Value(1)),
+                When(code="GBP", then=Value(2)),
+                default=Value(3),
+                output_field=IntegerField(),
+            ),
+            "code",
+        )
+        self.fields["currency"].queryset = preferred_order
+        if not self.instance.pk and not self.data.get("currency"):
+            euro_currency = preferred_order.filter(code="EUR").first()
+            if euro_currency:
+                self.initial["currency"] = euro_currency.pk
