@@ -1,30 +1,69 @@
-# Django CRM
+# Simple CRM
 
-Customer Relationship Management system written in Python
+This project is a Django CRM app with login, signup, dashboard, and profile management.
 
+## Run locally
 
-***To generate ER Diagrams***
+1. Open a terminal in the project root.
+2. Create and activate a virtual environment if you want an isolated setup:
 
-` $env:FONTCONFIG_PATH = "C:\git\django_crm\fontconfig\"`
+   ```bash
+   python -m venv .venv
+   .venv\Scripts\activate
+   ```
 
-Then:
+3. Install dependencies:
 
-`python manage.py graph_models -a -o project_erd.png`
+   ```bash
+   pip install -r requirements.txt
+   ```
 
-`python manage.py graph_models --pygraphviz -a -g -o ../devnotes/my_project_visualized.png`
+4. Change into the Django project directory:
 
-Seems to overlap on Windows11
+   ```bash
+   cd piv
+   ```
 
-Default admin and password
+5. Apply database migrations:
 
-**Collect static files**
+   ```bash
+   python manage.py migrate
+   ```
 
-`python manage.py collectstatic`
+6. Start the app:
 
-** Start the server **
+   ```bash
+   python manage.py runserver
+   ```
 
-`python manage.py runserver`
+7. Open the app in a browser at:
 
-Notes:
+   ```text
+   http://127.0.0.1:8000/
+   ```
 
-using [grappelli](https://django-grappelli.readthedocs.io/en/latest/quickstart.html#installation) theme
+## Default login and signup
+
+- Signup is available from the login page.
+- A user can log in after creating an account or by using an existing Django user.
+- The app also includes seeded mock users for local testing if you want sample profile data available in the database.
+
+## Useful commands
+
+Create a superuser:
+
+```bash
+python manage.py createsuperuser
+```
+
+Run tests:
+
+```bash
+python manage.py test crm
+```
+
+Collect static files:
+
+```bash
+python manage.py collectstatic
+```
