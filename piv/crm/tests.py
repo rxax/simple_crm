@@ -51,12 +51,21 @@ class ProfileUpdateViewTests(TestCase):
 
         self.client.login(username="old@example.com", password="s3cur3password")
 
+        response = self.client.get(reverse("profile"))
+        self.assertEqual(response.status_code, 200)
+        self.assertContains(response, "old@example.com")
+        self.assertContains(response, "Old Name")
+        self.assertContains(response, "+1000000000")
+        self.assertNotContains(response, "s3cur3password")
+
         response = self.client.post(
             reverse("profile"),
             {
                 "email": "new@example.com",
                 "full_name": "New Name",
                 "phone": "+1111111111",
+                "password": "newpassword123",
+                "confirm_password": "newpassword123",
             },
             follow=True,
         )
@@ -66,5 +75,6 @@ class ProfileUpdateViewTests(TestCase):
         self.assertEqual(user.email, "new@example.com")
         self.assertEqual(user.username, "new@example.com")
         self.assertEqual(user.first_name, "New Name")
+        self.assertTrue(user.check_password("newpassword123"))
         self.assertTrue(UserProfile.objects.filter(user=user, full_name="New Name", phone="+1111111111").exists())
         self.assertRedirects(response, reverse("profile"))

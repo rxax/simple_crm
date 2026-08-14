@@ -16,20 +16,25 @@ def index(request):
 @login_required(login_url='login')
 def profile_view(request):
     profile = getattr(request.user, "profile", None)
-    form = ProfileUpdateForm(request.user, initial={
+    initial_data = {
         "email": request.user.email,
-        "full_name": profile.full_name if profile else request.user.get_full_name(),
+        "full_name": profile.full_name if profile else request.user.get_full_name() or request.user.first_name or "",
         "phone": profile.phone if profile else "",
-    })
+        "password": "",
+        "confirm_password": "",
+    }
+    form = ProfileUpdateForm(request.user, initial=initial_data)
 
     if request.method == "POST":
         form = ProfileUpdateForm(request.user, request.POST)
         if form.is_valid():
-            form.save()
+            user = form.save()
+            if user:
+                login(request, user)
             messages.success(request, "Your profile has been updated successfully.")
             return redirect("profile")
 
-    return render(request, "crm/profile.html", {"form": form})
+    return render(request, "crm/profile.html", {"form": form, "user_profile": profile})
 
 
 def login_view(request):
