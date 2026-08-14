@@ -1,3 +1,5 @@
+<h3><span style="color:orange">Under development, not production ready yet.</span></h3>
+
 # Simple CRM
 
 This project is a Django CRM app with login, signup, dashboard, profile management, and company administration.
