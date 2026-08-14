@@ -1,0 +1,18 @@
+services:
+  web:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: django-crm
+    restart: unless-stopped
+    environment:
+      DEBUG: "True"
+      ALLOWED_HOSTS: "localhost,127.0.0.1,0.0.0.0"
+      DB_PATH: "/data/db.sqlite3"
+    ports:
+      - "8000:8000"
+    volumes:
+      - sqlite_data:/data
+
+volumes:
+  sqlite_data:

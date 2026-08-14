@@ -4,6 +4,28 @@ This project is a Django CRM app with login, signup, dashboard, and profile mana
 
 ## Run locally
 
+### Option 1: Docker Compose
+
+From the project root:
+
+```bash
+docker compose up --build
+```
+
+Then open:
+
+```text
+http://localhost:8000/
+```
+
+To stop it:
+
+```bash
+docker compose down
+```
+
+### Option 2: Local virtual environment
+
 1. Open a terminal in the project root.
 2. Create and activate a virtual environment if you want an isolated setup:
 
