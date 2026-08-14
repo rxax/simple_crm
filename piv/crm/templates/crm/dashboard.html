@@ -38,4 +38,10 @@
   <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Phone: {% if profile %}{{ profile.phone|default:'Not set' }}{% else %}Not set{% endif %}</p>
   <a href="{% url 'profile' %}" style="display: inline-block; padding: 0.8rem 1.25rem; border-radius: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #7dd3fc; text-decoration: none; font-weight: 600;">Edit profile</a>
 </div>
+
+<div class="card" style="margin-top: 1.5rem;">
+  <h3 style="margin-bottom: 1rem;">🏢 Company management</h3>
+  <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Create, edit, and remove companies from your CRM.</p>
+  <a href="{% url 'companies' %}" style="display: inline-block; padding: 0.8rem 1.25rem; border-radius: 8px; background: rgba(74, 222, 128, 0.15); border: 1px solid rgba(74, 222, 128, 0.3); color: #86efac; text-decoration: none; font-weight: 600;">Manage companies</a>
+</div>
 {% endblock %}
