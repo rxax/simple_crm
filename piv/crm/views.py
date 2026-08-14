@@ -4,12 +4,32 @@ from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 
-from .forms import SignupForm
+from .forms import SignupForm, ProfileUpdateForm
 
 
 @login_required(login_url='login')
 def index(request):
-    return render(request, "crm/dashboard.html")
+    profile = getattr(request.user, "profile", None)
+    return render(request, "crm/dashboard.html", {"profile": profile})
+
+
+@login_required(login_url='login')
+def profile_view(request):
+    profile = getattr(request.user, "profile", None)
+    form = ProfileUpdateForm(request.user, initial={
+        "email": request.user.email,
+        "full_name": profile.full_name if profile else request.user.get_full_name(),
+        "phone": profile.phone if profile else "",
+    })
+
+    if request.method == "POST":
+        form = ProfileUpdateForm(request.user, request.POST)
+        if form.is_valid():
+            form.save()
+            messages.success(request, "Your profile has been updated successfully.")
+            return redirect("profile")
+
+    return render(request, "crm/profile.html", {"form": form})
 
 
 def login_view(request):

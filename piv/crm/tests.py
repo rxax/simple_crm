@@ -37,3 +37,34 @@ class SignupViewTests(TestCase):
         self.assertTrue(get_user_model().objects.filter(email="newuser@example.com").exists())
         self.assertTrue(UserProfile.objects.filter(full_name="Jane Doe", phone="+1234567890").exists())
         self.assertRedirects(response, reverse("index"))
+
+
+class ProfileUpdateViewTests(TestCase):
+    def test_logged_in_user_can_update_own_profile(self):
+        user = get_user_model().objects.create_user(
+            username="old@example.com",
+            email="old@example.com",
+            password="s3cur3password",
+            first_name="Old Name",
+        )
+        UserProfile.objects.create(user=user, full_name="Old Name", phone="+1000000000")
+
+        self.client.login(username="old@example.com", password="s3cur3password")
+
+        response = self.client.post(
+            reverse("profile"),
+            {
+                "email": "new@example.com",
+                "full_name": "New Name",
+                "phone": "+1111111111",
+            },
+            follow=True,
+        )
+
+        self.assertEqual(response.status_code, 200)
+        user.refresh_from_db()
+        self.assertEqual(user.email, "new@example.com")
+        self.assertEqual(user.username, "new@example.com")
+        self.assertEqual(user.first_name, "New Name")
+        self.assertTrue(UserProfile.objects.filter(user=user, full_name="New Name", phone="+1111111111").exists())
+        self.assertRedirects(response, reverse("profile"))

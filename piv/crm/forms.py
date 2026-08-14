@@ -38,3 +38,45 @@ class SignupForm(forms.Form):
         )
         UserProfile.objects.create(user=user, full_name=full_name, phone=phone)
         return user
+
+
+class ProfileUpdateForm(forms.Form):
+    email = forms.EmailField(required=True)
+    full_name = forms.CharField(required=True, max_length=255)
+    phone = forms.CharField(required=True, max_length=50)
+
+    def __init__(self, user=None, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.user = user
+        if user:
+            profile = getattr(user, "profile", None)
+            self.fields["email"].initial = user.email
+            self.fields["full_name"].initial = profile.full_name if profile else user.get_full_name()
+            self.fields["phone"].initial = profile.phone if profile else ""
+
+    def clean_email(self):
+        email = self.cleaned_data["email"].strip().lower()
+        if self.user and self.user.email.lower() != email and User.objects.filter(email__iexact=email).exclude(pk=self.user.pk).exists():
+            raise ValidationError("A user with this email already exists.")
+        return email
+
+    def save(self):
+        if not self.user:
+            return None
+
+        email = self.cleaned_data["email"].strip().lower()
+        full_name = self.cleaned_data["full_name"].strip()
+        phone = self.cleaned_data["phone"].strip()
+
+        self.user.email = email
+        self.user.username = email
+        self.user.first_name = full_name
+        self.user.last_name = ""
+        self.user.save()
+
+        profile, _ = UserProfile.objects.get_or_create(user=self.user)
+        profile.full_name = full_name
+        profile.phone = phone
+        profile.save()
+
+        return self.user

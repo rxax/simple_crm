@@ -30,4 +30,12 @@
     <div style="color: rgba(255, 255, 255, 0.6); font-size: 0.9rem; margin-top: 0.5rem;">Pending Tasks</div>
   </div>
 </div>
+
+<div class="card" style="margin-top: 1.5rem;">
+  <h3 style="margin-bottom: 1rem;">👤 Profile Overview</h3>
+  <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">Email: {{ request.user.email|default:'Not set' }}</p>
+  <p style="color: rgba(255,255,255,0.7); margin-bottom: 1rem;">Full name: {{ request.user.get_full_name|default:'Not set' }}</p>
+  <p style="color: rgba(255,255,255,0.7); margin-bottom: 1.5rem;">Phone: {% if profile %}{{ profile.phone|default:'Not set' }}{% else %}Not set{% endif %}</p>
+  <a href="{% url 'profile' %}" style="display: inline-block; padding: 0.8rem 1.25rem; border-radius: 8px; background: rgba(56, 189, 248, 0.15); border: 1px solid rgba(56, 189, 248, 0.3); color: #7dd3fc; text-decoration: none; font-weight: 600;">Edit profile</a>
+</div>
 {% endblock %}
