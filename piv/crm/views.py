@@ -2,11 +2,11 @@ from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
+from django.contrib.auth.decorators import login_required
 
+@login_required(login_url='login')
 def index(request):
-    if request.user.is_authenticated:
-        return HttpResponse(f"Hello, {request.user.username}. You're at the crm index")
-    return HttpResponse("You're at the crm index. <a href='/login/'>Login</a>")
+    return render(request, "crm/dashboard.html")
 
 
 def login_view(request):
