@@ -1,3 +1,5 @@
+from django.contrib.sessions.backends.db import SessionStore
+from django.http import HttpResponseRedirect
 from django.shortcuts import render, redirect, get_object_or_404
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
@@ -64,7 +66,7 @@ def signup_view(request):
 
 @login_required(login_url='login')
 def company_list_view(request):
-    companies = Company.objects.all().order_by("name")
+    companies = Company.objects.filter(owner__exact=request.user).order_by("name")
     form = CompanyForm()
     return render(request, "crm/companies.html", {"companies": companies, "form": form})
 
@@ -75,6 +77,9 @@ def company_create_view(request):
         form = CompanyForm(request.POST)
         if form.is_valid():
             company = form.save()
+            # save company owner, one-time change
+            company.owner = request.user
+            company.save()
             messages.success(request, f"Company '{company.name}' created successfully.")
             return redirect("companies")
     else:
@@ -104,6 +109,17 @@ def company_delete_view(request, pk):
         company.delete()
         messages.success(request, f"Company '{name}' deleted successfully.")
     return redirect("companies")
+
+@login_required(login_url='login')
+def active_company_update(request):
+    if request.method == "POST":
+        active_company = Company.objects.get(pk=request.POST.get("active_company"))
+        request.session['active_company'] = {
+            'name': active_company.name,
+            'id': active_company.id,
+        }
+        next = request.POST.get('next', '/')
+        return HttpResponseRedirect(next)
 
 
 def logout_view(request):

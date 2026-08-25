@@ -1,10 +1,15 @@
 <div class="dropdown-content">
+<form method="post" action="{% url 'active_company' %}">
+{% csrf_token %}
     <label>
-    <select name="company">
+    <select name="active_company" id="active_company" class="company-dropdown">
         {% for user_company in user_companies %}
-            <option value="{{ user_company.pk }}"
-                    {% if user_company.pk == current_company.pk %} selected="selected" {% endif %}>{{ user_company.name }}</option>
+            <option value="{{ user_company.id }}"
+                    {% if user_company.id == active_company.id %} selected="selected" {% endif %}>{{ user_company.name }}</option>
         {% endfor %}
     </select>
+    <input type="hidden" name="next" value="{{ request.path }}">
+    <button class="blue-button">Open</button>
 </label>
+</form>
 </div>

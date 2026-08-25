@@ -142,7 +142,7 @@ class CompanyForm(forms.ModelForm):
             "billing_email",
             "address",
             "website",
-            "currency",
+            "currency"
         ]
         widgets = {
             "address": forms.Textarea(attrs={"rows": 4}),
@@ -166,3 +166,4 @@ class CompanyForm(forms.ModelForm):
             euro_currency = preferred_order.filter(code="EUR").first()
             if euro_currency:
                 self.initial["currency"] = euro_currency.pk
+
