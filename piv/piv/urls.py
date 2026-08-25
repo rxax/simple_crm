@@ -21,6 +21,6 @@ urlpatterns = [
     path('tinymce/', include('tinymce.urls')),
     path('grappelli/', include('grappelli.urls')),  # grappelli URLS
     path('admin/', admin.site.urls),
-    path("invoice/", include("invoice.urls")),
+    path("invoices/", include("invoice.urls")),
     path("", include("crm.urls")),
 ]

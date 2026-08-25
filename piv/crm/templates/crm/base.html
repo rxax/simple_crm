@@ -345,6 +345,12 @@
               </a>
             </li>
             <li class="nav-item">
+              <a href="{% url 'invoices' %}" class="nav-link{% if request.resolver_match.url_name == 'invoices' or request.resolver_match.url_name == 'invoice_create' or request.resolver_match.url_name == 'invoice_edit' %} active{% endif %}">
+                <span class="nav-icon">📑</span>
+                <span>Invoices</span>
+              </a>
+            </li>
+            <li class="nav-item">
               <a href="#" class="nav-link">
                 <span class="nav-icon">👥</span>
                 <span>Contacts</span>

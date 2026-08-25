@@ -1,0 +1,74 @@
+{% extends "crm/base.html" %}
+
+{% block title %}Companies - CRM{% endblock %}
+{% block page_title %}Companies{% endblock %}
+
+{% block content %}
+<div class="card" style="margin-bottom: 1.5rem;">
+  <div style="display: flex; justify-content: space-between; align-items: center; gap: 1rem; flex-wrap: wrap;">
+    <div>
+      <h2 style="margin: 0 0 0.5rem;">Company directory</h2>
+      <p style="margin: 0; color: rgba(255,255,255,0.7);">Manage all invoices in one place.</p>
+    </div>
+    <a href="{% url 'invoice_create' %}" style="display: inline-block; padding: 0.8rem 1.25rem; border-radius: 8px; background: linear-gradient(135deg, #38bdf8 0%, #0284c7 100%); color: white; text-decoration: none; font-weight: 700;">Create invoice</a>
+  </div>
+</div>
+
+{% if messages %}
+<div class="card" style="margin-bottom: 1.5rem;">
+  <ul style="margin: 0; padding-left: 1.25rem; color: #d1fae5;">
+    {% for message in messages %}
+      <li>{{ message }}</li>
+    {% endfor %}
+  </ul>
+</div>
+{% endif %}
+
+<div class="card">
+  {% if invoices %}
+    <div style="overflow-x: auto;">
+      <table style="width: 100%; border-collapse: collapse; color: white; min-width: 700px;">
+        <thead>
+          <tr style="border-bottom: 1px solid rgba(255,255,255,0.1); text-align: left;">
+            <th style="padding: 0.75rem 0.5rem;">Client</th>
+            <th style="padding: 0.75rem 0.5rem;">Number</th>
+            <th style="padding: 0.75rem 0.5rem;">Issue Date</th>
+            <th style="padding: 0.75rem 0.5rem;">Due Date</th>
+            <th style="padding: 0.75rem 0.5rem;">Subtotal</th>
+              <th style="padding: 0.75rem 0.5rem;">Tax</th>
+              <th style="padding: 0.75rem 0.5rem;">Total</th>
+               <th style="padding: 0.75rem 0.5rem;">Status</th>
+            <th style="padding: 0.75rem 0.5rem; text-align: right;">Actions</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for invoice in invoices %}
+            <tr style="border-bottom: 1px solid rgba(255,255,255,0.08);">
+                <td style="padding: 0.9rem 0.5rem; font-weight: 600;">{{ invoice.account.name }}</td>
+                <td style="padding: 0.9rem 0.5rem; color: rgba(255,255,255,0.7);">{{ invoice.invoice_number }}</td>
+                <td style="padding: 0.9rem 0.5rem; color: rgba(255,255,255,0.7);">{{ invoice.issue_date}}</td>
+                <td style="padding: 0.9rem 0.5rem; color: rgba(255,255,255,0.7);">{{ invoice.due_date }}</td>
+                <td style="padding: 0.9rem 0.5rem; color: rgba(255,255,255,0.7);">{{ invoice.subtotal }}</td>
+                <td style="padding: 0.9rem 0.5rem; color: rgba(255,255,255,0.7);">{{ invoice.tax_amount }}</td>
+                <td style="padding: 0.9rem 0.5rem; color: rgba(255,255,255,0.7);">{{ invoice.total_amount }}</td>
+                <td style="padding: 0.9rem 0.5rem; color: rgba(255,255,255,0.7);">{{ invoice.status }}</td>
+
+                <td style="padding: 0.9rem 0.5rem; text-align: right;">
+                  <div style="display: flex; justify-content: flex-end; gap: 0.5rem; flex-wrap: wrap;">
+                    <a href="{% url 'invoice_edit' invoice.pk %}" style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 8px; background: rgba(56,189,248,0.12); color: #7dd3fc; text-decoration: none; border: 1px solid rgba(56,189,248,0.3); font-size: 1.1rem;" aria-label="Edit Invoice">✏️</a>
+                    <form method="post" action="{% url 'invoice_delete' invoice.pk %}" onsubmit="return confirm('Delete this invoice?');" style="display: inline;">
+                      {% csrf_token %}
+                      <button type="submit" style="display: inline-flex; align-items: center; justify-content: center; width: 38px; height: 38px; border-radius: 8px; background: rgba(244,114,182,0.12); color: #f9a8d4; border: 1px solid rgba(244,114,182,0.35); cursor: pointer; font-size: 1.1rem;" aria-label="Delete {{ invoice.invoice_number }}">🗑️</button>
+                    </form>
+                  </div>
+                </td>
+            </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  {% else %}
+    <p style="margin: 0; color: rgba(255,255,255,0.7);">No invoices yet. Create one to get started.</p>
+  {% endif %}
+</div>
+{% endblock %}
