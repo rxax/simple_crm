@@ -48,6 +48,13 @@ class Company(models.Model):
         related_name="companies"
     )
 
+    owner = models.ForeignKey(
+        settings.AUTH_USER_MODEL,
+        on_delete=models.SET_NULL,
+        null=True,
+        related_name="companies"
+    )
+
     def __str__(self):
         return self.name
 

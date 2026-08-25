@@ -1,0 +1,10 @@
+<div class="dropdown-content">
+    <label>
+    <select name="company">
+        {% for user_company in user_companies %}
+            <option value="{{ user_company.pk }}"
+                    {% if user_company.pk == current_company.pk %} selected="selected" {% endif %}>{{ user_company.name }}</option>
+        {% endfor %}
+    </select>
+</label>
+</div>
