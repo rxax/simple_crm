@@ -2,7 +2,8 @@ from crm.models import Company
 from django.contrib.sessions.backends.db import SessionStore
 
 """
-Site Context for current company, selected/active company"""
+Site Context for current company, selected/active company
+"""
 
 def site_context(request):
     user = request.user
