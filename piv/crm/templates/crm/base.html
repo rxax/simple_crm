@@ -8,86 +8,11 @@
     <link rel="stylesheet" href="{% static 'css/global.css' %}">
   </head>
   <body>
+      {% if user.is_authenticated %}
     <!-- Sidebar -->
-    <aside class="sidebar" id="sidebar">
-      <div class="sidebar-header">
-        <a href="{% url 'index' %}" class="sidebar-logo">CRM</a>
-      </div>
 
-      <nav class="sidebar-nav">
-        <div class="nav-section">
-          <div class="nav-section-title">Main</div>
-          <ul class="nav-list">
-            <li class="nav-item">
-              <a href="{% url 'index' %}" class="nav-link{% if request.resolver_match.url_name == 'index' %} active{% endif %}">
-                <span class="nav-icon">📊</span>
-                <span>Dashboard</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'companies' %}" class="nav-link{% if request.resolver_match.url_name == 'companies' or request.resolver_match.url_name == 'company_create' or request.resolver_match.url_name == 'company_edit' %} active{% endif %}">
-                <span class="nav-icon">🏢</span>
-                <span>Companies</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'invoices' %}" class="nav-link{% if request.resolver_match.url_name == 'invoices' or request.resolver_match.url_name == 'invoice_create' or request.resolver_match.url_name == 'invoice_edit' %} active{% endif %}">
-                <span class="nav-icon">📑</span>
-                <span>Invoices</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <span class="nav-icon">👥</span>
-                <span>Contacts</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <span class="nav-icon">📋</span>
-                <span>Tasks</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <span class="nav-icon">💰</span>
-                <span>Deals</span>
-              </a>
-            </li>
-          </ul>
-        </div>
+        {%  include "crm/parts/sidebar.html" %}
 
-        <div class="nav-section">
-          <div class="nav-section-title">Settings</div>
-          <ul class="nav-list">
-            <li class="nav-item">
-              <a href="#" class="nav-link">
-                <span class="nav-icon">⚙️</span>
-                <span>Configuration</span>
-              </a>
-            </li>
-            <li class="nav-item">
-              <a href="{% url 'profile' %}" class="nav-link{% if request.resolver_match.url_name == 'profile' %} active{% endif %}">
-                <span class="nav-icon">👤</span>
-                <span>Profile</span>
-              </a>
-            </li>
-          </ul>
-        </div>
-      </nav>
-
-      <div class="sidebar-footer">
-        <div class="user-info">
-          <div class="user-avatar">{{ request.user.username|first|upper }}</div>
-          <div class="user-name">{{ request.user.get_full_name|default:request.user.username }}</div>
-          <div class="user-role">Administrator</div>
-        </div>
-        <a href="{% url 'logout' %}" class="logout-btn">
-          <span>🚪</span>
-          <span>Logout</span>
-        </a>
-      </div>
-    </aside>
 
     <!-- Main Content -->
     <div class="main-content">
@@ -105,32 +30,10 @@
         {% block content %}{% endblock %}
       </div>
     </div>
+   {% endif %}
 
-    <script>
-      function toggleSidebar() {
-        const sidebar = document.getElementById('sidebar');
-        sidebar.classList.toggle('active');
-      }
+      {% block login_form %}{% endblock %}
 
-      // Close sidebar when clicking on a link (mobile)
-      document.querySelectorAll('.nav-link').forEach(link => {
-        link.addEventListener('click', () => {
-          if (window.innerWidth <= 768) {
-            document.getElementById('sidebar').classList.remove('active');
-          }
-        });
-      });
 
-      // Close sidebar when clicking outside (mobile)
-      document.addEventListener('click', (e) => {
-        const sidebar = document.getElementById('sidebar');
-        const toggle = document.getElementById('menuToggle');
-        if (window.innerWidth <= 768) {
-          if (!sidebar.contains(e.target) && !toggle.contains(e.target)) {
-            sidebar.classList.remove('active');
-          }
-        }
-      });
-    </script>
   </body>
 </html>

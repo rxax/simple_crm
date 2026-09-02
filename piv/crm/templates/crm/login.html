@@ -1,17 +1,18 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Login - CRM</title>
-    <style>
+{% extends "crm/base.html" %}
+
+{% block title %}Login{% endblock %}
+{% block page_title %}Login{% endblock %}
+
+{% block login_form %}
+<style>
+
       :root {
         --background-color: #191919;
         --card-bg: #222;
         --input-bg: rgba(255, 255, 255, 0.05);
         --input-border: rgba(255, 255, 255, 0.1);
         --input-focus: #38bdf8;
-        --text-primary: #3b3b3b;
+        --text-primary: #ffffff;
         --text-secondary: rgba(255, 255, 255, 0.7);
         --button-bg: #38bdf8;
         --button-hover: #0284c7;
@@ -231,9 +232,10 @@
           padding-right: 2.75rem;
         }
       }
-    </style>
-  </head>
-  <body>
+
+</style>
+
+
     <div class="login-container">
       <div class="login-card">
         <div class="login-header">
@@ -285,5 +287,4 @@
         </div>
       </div>
     </div>
-  </body>
-</html>
+{% endblock %} 
